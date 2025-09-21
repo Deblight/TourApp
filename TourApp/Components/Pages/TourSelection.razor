@@ -1,0 +1,85 @@
+﻿@page "/tour"
+@rendermode InteractiveServer
+@inject IEventApi Api
+
+
+<h1 class="title">Tour Selection</h1>
+
+<EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="field">
+        <label for="name">Name</label>
+        <InputText id="name" class="input" @bind-Value="model.Name" />
+        <ValidationMessage For="() => model.Name" />
+    </div>
+
+    <div class="field">
+        <label for="email">Email</label>
+        <InputText id="email" class="input" @bind-Value="model.Email" />
+        <ValidationMessage For="() => model.Email" />
+    </div>
+
+    <div class="field">
+        <label for="tour">Tours</label>
+        <InputSelect id="tour" class="select" @bind-Value="model.TourId">
+            <option value="">Choose one</option>
+            @foreach (var t in tours)
+            {
+                <option value="@t.Id">@t.Name</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => model.TourId" />
+    </div>
+
+    <div class="field inline">
+        <InputRadioGroup @bind-Value="model.Action">
+            <InputRadio Value="SignupAction.Book" /> <span>Book</span>
+            <InputRadio Value="SignupAction.Cancel" class="ms-3" /> <span>Cancel</span>
+        </InputRadioGroup>
+        <ValidationMessage For="() => model.Action" />
+    </div>
+
+    <button disabled="@busy" class="btn">
+        @(busy ? "Submitting..." : "Submit")
+    </button>
+</EditForm>
+
+@if (toast is not null)
+{
+    <div class="toast @(toast.Success ? "ok" : "bad")" role="status" aria-live="polite">@toast.Message</div>
+}
+<script src="_framework/blazor.web.js"></script>
+
+@code {
+    private SignupFormModel model = new();
+    private List<TourDto> tours = new();
+    private bool busy;
+    private SignupResponse? toast;
+
+    protected override async Task OnInitializedAsync()
+        => tours = (await Api.GetToursAsync()).ToList();
+
+    private async Task HandleSubmit()
+    {
+        toast = null;
+        busy = true;
+        try
+        {
+            var res = await Api.SubmitAsync(model);
+            toast = res;
+
+            if (res.Success && model.Action == SignupAction.Book)
+                model = new SignupFormModel { Action = SignupAction.Book };
+        }
+        finally
+        {
+            busy = false;
+            StateHasChanged();
+            await Task.Delay(2000);
+            toast = null;
+            StateHasChanged();
+        }
+    }
+}

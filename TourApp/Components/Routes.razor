@@ -1,0 +1,17 @@
+﻿@namespace TourApp.Components
+@using Microsoft.AspNetCore.Components.Routing
+
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData"
+                   DefaultLayout="@typeof(TourApp.Components.Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(TourApp.Components.Layout.MainLayout)">
+            <h1>Not found</h1>
+            <p>Der er ingen side på denne adresse.</p>
+            <a href="/tour">Gå til /tour</a>
+        </LayoutView>
+    </NotFound>
+</Router>

@@ -1,0 +1,71 @@
+﻿.title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin: 1rem 0 1.5rem;
+}
+
+.field {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+    .field.inline {
+        flex-direction: row;
+        align-items: center;
+        gap: .75rem;
+    }
+
+label {
+    font-weight: 600;
+}
+
+.input, .select {
+    padding: .6rem .8rem;
+    border: 1px solid #d1d5db;
+    border-radius: .5rem;
+    font-size: 1rem;
+}
+
+.btn {
+    margin-top: .5rem;
+    background: #2563eb;
+    color: #fff;
+    border: 0;
+    border-radius: .5rem;
+    padding: .6rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+    .btn[disabled] {
+        opacity: .6;
+        cursor: not-allowed;
+    }
+
+.validation-message, .validation-errors {
+    color: #b91c1c;
+    font-size: .9rem;
+}
+
+.toast {
+    margin-top: 1rem;
+    padding: .8rem 1rem;
+    border-radius: .5rem;
+    font-weight: 600;
+}
+
+    .toast.ok {
+        background: #16a34a;
+        color: #fff;
+    }
+
+    .toast.bad {
+        background: #dc2626;
+        color: #fff;
+    }
+
+.ms-3 {
+    margin-left: 1rem;
+}
