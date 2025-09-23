@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using TourApp.Common.Models;
 using TourApp.Infrastructure.Interfaces;
 using RabbitMQ.Client;
 
@@ -16,15 +17,14 @@ internal class RabbitMQRepository : IBookingRepository
     _connectionFacotry = connectionFacotry;
   }
 
-  public async Task<bool> PlaceBookingAsync(object booking, CancellationToken cancellationToken = default)
+  public async Task<bool> PlaceBookingAsync(CreateBooking booking, CancellationToken cancellationToken = default)
   {
     try
     {
       using IConnection connection = await _connectionFacotry.CreateConnectionAsync(cancellationToken: cancellationToken);
       using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-      const string ROUTE_KEY = "tour.booked";
-      await EnsureQueueExistsAsync(channel, ROUTE_KEY, cancellationToken);
+      await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Fanout, cancellationToken: cancellationToken);
 
       string message = JsonSerializer.Serialize(booking);
       byte[] messageBody = Encoding.UTF8.GetBytes(message);
@@ -35,6 +35,7 @@ internal class RabbitMQRepository : IBookingRepository
         CorrelationId = Guid.NewGuid().ToString("D"),
       };
 
+      const string ROUTE_KEY = "tour.booked";
       await channel.BasicPublishAsync(_EXCHANGE_NAME, ROUTE_KEY, mandatory: true, properties, messageBody, cancellationToken: cancellationToken);
       return true;
     }
@@ -45,15 +46,14 @@ internal class RabbitMQRepository : IBookingRepository
     }
   }
 
-  public async Task<bool> CancelBookingAsync(object cancellation, CancellationToken cancellationToken = default)
+  public async Task<bool> CancelBookingAsync(CancelBooking cancellation, CancellationToken cancellationToken = default)
   {
     try
     {
       using IConnection connection = await _connectionFacotry.CreateConnectionAsync(cancellationToken: cancellationToken);
       using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-      const string ROUTE_KEY = "tour.cancelled";
-      await EnsureQueueExistsAsync(channel, ROUTE_KEY, cancellationToken);
+      await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Fanout, cancellationToken: cancellationToken);
 
       string message = JsonSerializer.Serialize(cancellation);
       byte[] messageBody = Encoding.UTF8.GetBytes(message);
@@ -64,6 +64,7 @@ internal class RabbitMQRepository : IBookingRepository
         CorrelationId = Guid.NewGuid().ToString("D"),
       };
 
+      const string ROUTE_KEY = "tour.cancelled";
       await channel.BasicPublishAsync(_EXCHANGE_NAME, ROUTE_KEY, mandatory: true, properties, messageBody, cancellationToken: cancellationToken);
       return true;
     }
@@ -72,13 +73,5 @@ internal class RabbitMQRepository : IBookingRepository
       //TODO: lets do some logging
       return false;
     }
-  }
-
-  private async Task EnsureQueueExistsAsync(IChannel channel, string routeKey, CancellationToken cancellationToken)
-  {
-    await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Topic, cancellationToken: cancellationToken);
-    var queue = await channel.QueueDeclareAsync(routeKey, durable: true, autoDelete: false, cancellationToken: cancellationToken);
-
-    await channel.QueueBindAsync(queue.QueueName, _EXCHANGE_NAME, routeKey, cancellationToken: cancellationToken);
   }
 }

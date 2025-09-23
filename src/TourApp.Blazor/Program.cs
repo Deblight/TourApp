@@ -1,3 +1,4 @@
+using TourApp.Application.DepenedencyInjection;
 using TourApp.Blazor.Components;
 using TourApp.Blazor.Services;
 
@@ -8,6 +9,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddEventApiDemo();
+builder.Services.AddBookingService();
+//NOTE: currently hardcoded, should be read from launchSettings.json
+builder.Services.AddDatabaseConnection("https://localhost:5421", "admin", "admin");
 
 
 var app = builder.Build();

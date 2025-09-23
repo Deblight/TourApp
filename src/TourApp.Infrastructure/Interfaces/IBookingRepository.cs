@@ -1,8 +1,9 @@
+using TourApp.Common.Models;
 
 namespace TourApp.Infrastructure.Interfaces;
 
 public interface IBookingRepository
 {
-  Task<bool> PlaceBookingAsync(object booking, CancellationToken cancellationToken=default);
-  Task<bool> CancelBookingAsync(object cancellation, CancellationToken cancellationToken=default);
+  Task<bool> PlaceBookingAsync(CreateBooking booking, CancellationToken cancellationToken=default);
+  Task<bool> CancelBookingAsync(CancelBooking cancellation, CancellationToken cancellationToken=default);
 }
