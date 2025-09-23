@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TourApp.Interfaces;
+using TourApp.Blazor.Interfaces;
 
-namespace TourApp.Services;
+namespace TourApp.Blazor.Services;
 
 public static class ServiceCollectionExtensions
 {

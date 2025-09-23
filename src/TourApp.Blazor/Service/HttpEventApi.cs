@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Json;
-using TourApp.Interfaces;
-using TourApp.Models;
+using TourApp.Blazor.Interfaces;
+using TourApp.Blazor.Models;
 
-namespace TourApp.Services;
+namespace TourApp.Blazor.Services;
 
 public sealed class HttpEventApi(HttpClient http) : IEventApi
 {

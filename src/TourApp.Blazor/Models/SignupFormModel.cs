@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TourApp.Models;
+namespace TourApp.Blazor.Models;
 
 public class SignupFormModel
 {

@@ -1,7 +1,7 @@
-﻿using TourApp.Interfaces;
-using TourApp.Models;
+﻿using TourApp.Blazor.Interfaces;
+using TourApp.Blazor.Models;
 
-namespace TourApp.Services;
+namespace TourApp.Blazor.Services;
 
 public sealed class DemoEventApi : IEventApi
 {

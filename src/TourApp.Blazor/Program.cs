@@ -1,5 +1,5 @@
-using TourApp.Components;
-using TourApp.Services;
+using TourApp.Blazor.Components;
+using TourApp.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
