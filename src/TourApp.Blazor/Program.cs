@@ -22,7 +22,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<TourApp.Components.App>()
+app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
 app.Run();
