@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TourApp.Infrastructure\TourApp.Infrastructure.csproj" />
-    <ProjectReference Include="..\TourApp.Common\TourApp.Common.csproj" />
-  </ItemGroup>
 </Project>

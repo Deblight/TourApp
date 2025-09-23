@@ -7,5 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TourApp.Application\TourApp.Application.csproj" />
+    <ProjectReference Include="..\TourApp.Common\TourApp.Common.csproj" />
   </ItemGroup>
 </Project>
