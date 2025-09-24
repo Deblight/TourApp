@@ -13,6 +13,11 @@ internal class BookingService : IBookingService
     _repository = repository;
   }
 
+  public async Task<bool> SetupAsync(CancellationToken cancellationToken=default)
+  {
+    return await _repository.SetupRepositoryAsync();
+  }
+
   public async Task<bool> CreateBookingAsync(CreateBooking booking, CancellationToken cancellationToken = default)
   {
     var result = await _repository.PlaceBookingAsync(booking, cancellationToken);

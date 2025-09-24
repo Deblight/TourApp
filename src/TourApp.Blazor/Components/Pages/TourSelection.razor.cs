@@ -16,7 +16,11 @@ public partial class TourSelection: ComponentBase
   private SignupResponse? toast;
 
   protected override async Task OnInitializedAsync()
-      => tours = (await Api.GetToursAsync()).ToList();
+  {
+    tours = (await Api.GetToursAsync()).ToList();
+
+    await Api.SetupAsync();
+  }
 
   private async Task HandleSubmit()
   {

@@ -9,8 +9,7 @@ namespace TourApp.Infrastructure.Repositories;
 internal class RabbitMQRepository : IBookingRepository
 {
   private readonly IConnectionFactory _connectionFacotry;
-  private const string _EXCHANGE_NAME = "tour_exchange";
-  // private const string _QUEUE_NAME = "tours";
+  private const string _EXCHANGE_NAME = "tour.topic";
 
   public RabbitMQRepository(IConnectionFactory connectionFacotry)
   {
@@ -24,7 +23,7 @@ internal class RabbitMQRepository : IBookingRepository
       using IConnection connection = await _connectionFacotry.CreateConnectionAsync(cancellationToken: cancellationToken);
       using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-      await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Fanout, cancellationToken: cancellationToken);
+      await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Topic, durable: true, autoDelete: false, cancellationToken: cancellationToken);
 
       string message = JsonSerializer.Serialize(booking);
       byte[] messageBody = Encoding.UTF8.GetBytes(message);
@@ -36,12 +35,12 @@ internal class RabbitMQRepository : IBookingRepository
       };
 
       const string ROUTE_KEY = "tour.booked";
-      await channel.BasicPublishAsync(_EXCHANGE_NAME, ROUTE_KEY, mandatory: true, properties, messageBody, cancellationToken: cancellationToken);
+      await channel.BasicPublishAsync("tour.topic", ROUTE_KEY, mandatory: true, properties, messageBody, cancellationToken: cancellationToken);
       return true;
     }
-    catch (Exception)
+    catch (Exception e)
     {
-      //TODO: lets do some logging
+      Console.WriteLine(e.Message);
       return false;
     }
   }
@@ -53,7 +52,7 @@ internal class RabbitMQRepository : IBookingRepository
       using IConnection connection = await _connectionFacotry.CreateConnectionAsync(cancellationToken: cancellationToken);
       using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-      await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Fanout, cancellationToken: cancellationToken);
+      await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Topic, cancellationToken: cancellationToken);
 
       string message = JsonSerializer.Serialize(cancellation);
       byte[] messageBody = Encoding.UTF8.GetBytes(message);
@@ -73,5 +72,14 @@ internal class RabbitMQRepository : IBookingRepository
       //TODO: lets do some logging
       return false;
     }
+  }
+
+  public async Task<bool> SetupRepositoryAsync(CancellationToken cancellationToken = default)
+  {
+    using IConnection connection = await _connectionFacotry.CreateConnectionAsync(cancellationToken: cancellationToken);
+    using IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
+
+    await channel.ExchangeDeclareAsync(_EXCHANGE_NAME, type: ExchangeType.Topic, durable: true, autoDelete: false, cancellationToken: cancellationToken);
+    return true;
   }
 }

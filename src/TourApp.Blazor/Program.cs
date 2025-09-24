@@ -1,17 +1,18 @@
 using TourApp.Application.DepenedencyInjection;
 using TourApp.Blazor.Components;
+using TourApp.Blazor.Interfaces;
 using TourApp.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddEventApiDemo();
+// builder.Services.AddEventApiDemo();
+builder.Services.AddScoped<IEventApi, RabbitMQEventApi>();
 builder.Services.AddBookingService();
 //NOTE: currently hardcoded, should be read from launchSettings.json
-builder.Services.AddDatabaseConnection("https://localhost:5421", "admin", "admin");
+builder.Services.AddDatabaseConnection("localhost", "user", "password");
 
 
 var app = builder.Build();

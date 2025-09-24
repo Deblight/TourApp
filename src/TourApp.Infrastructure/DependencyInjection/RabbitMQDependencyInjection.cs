@@ -14,7 +14,7 @@ public static class RabbitMQDependencyInjection
     {
       ConnectionFactory factory = new()
       {
-        Uri = new Uri(rabbitMQUri),
+        HostName = rabbitMQUri,
         UserName = username,
         Password = password
       };

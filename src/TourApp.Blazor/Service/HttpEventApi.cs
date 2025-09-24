@@ -9,6 +9,11 @@ public sealed class HttpEventApi(HttpClient http) : IEventApi
     public async Task<IReadOnlyList<TourDto>> GetToursAsync(CancellationToken ct = default)
         => await http.GetFromJsonAsync<IReadOnlyList<TourDto>>("api/tours", ct) ?? Array.Empty<TourDto>();
 
+  public Task<bool> SetupAsync(CancellationToken cancellationToken=default)
+  {
+    return Task.FromResult(true);
+  }
+
     public async Task<SignupResponse> SubmitAsync(SignupFormModel model, CancellationToken ct = default)
     {
         using var res = await http.PostAsJsonAsync("api/signups", model, ct);

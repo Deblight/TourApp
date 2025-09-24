@@ -15,6 +15,11 @@ public sealed class DemoEventApi : IEventApi
     private readonly HashSet<string> _bookings = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _gate = new();
 
+  public Task<bool> SetupAsync(CancellationToken cancellationToken=default)
+  {
+    return Task.FromResult(true);
+  }
+
     public Task<IReadOnlyList<TourDto>> GetToursAsync(CancellationToken ct = default)
         => Task.FromResult<IReadOnlyList<TourDto>>(_tours);
 
