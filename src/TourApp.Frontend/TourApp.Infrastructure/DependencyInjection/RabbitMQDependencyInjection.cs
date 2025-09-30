@@ -7,7 +7,7 @@ namespace TourApp.Infrastructure.DependencyInjection;
 
 public static class RabbitMQDependencyInjection
 {
-  public static IServiceCollection AddRabbitMQRepository(this IServiceCollection @this, string rabbitMQUri, string username, string password)
+  public static IServiceCollection AddRabbitMQRepository(this IServiceCollection @this, string rabbitMQUri, string username, string password, int portNr)
   {
     @this.AddScoped<IBookingRepository, RabbitMQRepository>();
     @this.AddSingleton<IConnectionFactory, ConnectionFactory>(_ =>
@@ -15,6 +15,7 @@ public static class RabbitMQDependencyInjection
       ConnectionFactory factory = new()
       {
         HostName = rabbitMQUri,
+        Port = portNr,
         UserName = username,
         Password = password
       };

@@ -12,16 +12,16 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<IEventApi, RabbitMQEventApi>();
 builder.Services.AddBookingService();
 //NOTE: currently hardcoded, should be read from launchSettings.json
-builder.Services.AddDatabaseConnection("localhost", "user", "password");
+builder.Services.AddDatabaseConnection("localhost", "user", "password", 52001);
 
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    app.UseHsts();
-}
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseExceptionHandler("/Error", createScopeForErrors: true);
+//     app.UseHsts();
+// }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
